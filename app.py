@@ -1,39 +1,49 @@
 import pandas as pd
-from flask import Flask, jsonify, request
+from flask import jsonify
 import pickle
+from flask import Flask, request
+from flask_restful import Api, Resource
 
 # load model
 model = pickle.load(open('./model.pkl', 'rb'))
 
 # app
 app = Flask(__name__)
-
-# routes
-
-@app.route('/')
-
-def hello():
-    return "MODEL TEST"
+api = Api(app)
 
 
-@app.route('/model', methods=['POST'])
 
-def predict():
-    # get data
-    data = request.get_json(force=True)
+class Helloworld(Resource):
 
-    # convert data into dataframe
-    data.update((x, [y]) for x, y in data.items())
-    data_df = pd.DataFrame.from_dict(data)
+    def get(self):
+        return 'MODEL TEST flask_RESTFUL'
 
-    # predictions
-    result = model.predict(data_df)
 
-    # send back to browser
-    output = {'results': int(result[0])}
+class Model_test(Resource):
 
-    # return data
-    return jsonify(results=output)
+    def post(self):
+        """ create a user"""
+        # print(request.get_json())
 
-if __name__ == '__main__':
+        data = request.get_json(force=True)
+        # print(data)
+        # convert data into dataframe
+        data.update((x, [y]) for x, y in data.items())
+        data_df = pd.DataFrame.from_dict(data)
+
+        # predictions
+        result = model.predict(data_df)
+
+        # send back to browser
+        output = {'results': int(result[0])}
+
+        return jsonify(results=output)
+
+
+api.add_resource(Helloworld, '/')
+api.add_resource(Model_test, '/model')
+
+
+if __name__ == "__main__":
     app.run()
+
