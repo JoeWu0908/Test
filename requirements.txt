@@ -1,6 +1,10 @@
+aniso8601==8.0.0
 certifi==2019.11.28
 Click==7.0
 Flask==1.1.1
+Flask-RESTful==0.3.7
+freeze==1.0.10
+gunicorn==20.0.4
 itsdangerous==1.1.0
 Jinja2==2.10.3
 joblib==0.14.1
